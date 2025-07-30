@@ -1,0 +1,30 @@
+<%- include('components/header') %>
+    <div class="w-full h-screen flex flex-col items-center justify-center">
+        <div class="w-[50vh] h-[70vh] border-2 border-black rounded-3xl text-center p-10">
+            <div class="mb-10 top-0">
+                <h1 class="text-3xl font-bold">ChatRoom</h1>
+            </div>
+            <form class="signup flex flex-col gap-4" action="/signup" method="post">
+                <div class="w-full flex flex-col">
+                    <input class=" bg-gray-100  font-semibold hover:border-black hover:font-bold h-[7vh] text-center rounded-3xl" type="text" id="username" name="username" required placeholder="Username">
+                </div>
+                <div class="w-full flex flex-col">
+                    <input class=" bg-gray-100  font-semibold hover:border-black hover:font-bold h-[7vh] text-center rounded-3xl" type="text" id="FullName" name="FullName" required placeholder="FullName">
+                </div>
+                <div class="w-full flex flex-col">
+                    <input class=" bg-gray-100  font-semibold hover:border-black hover:font-bold h-[7vh] text-center rounded-3xl" type="password" id="password" name="password" required placeholder="Password">
+                </div>
+                <div class="w-full flex flex-col">
+                    <input class=" bg-gray-100  font-semibold hover:border-black hover:font-bold h-[7vh] text-center rounded-3xl" type="text" id="PhoneNumber" name="PhoneNumber" required placeholder="Phone Number">
+                </div>
+                <div class="w-full text-center">
+                    <input type="submit" class="bg-blue-400 font-semibold hover:cursor-pointer hover:bg-blue-500 hover:font-bold h-[5vh] w-full text-center rounded-3xl" value="signup">
+                </div>
+                <div class="mt-10 font-semibold">
+                    Already have account <a class="hover:cursor-pointer text-blue-400 hover:text-blue-500 font-bold" href="/login">login</a>
+                </div>
+            </form>
+        </div>
+
+    </div>
+    <%- include('components/footer') %>
