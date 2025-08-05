@@ -23,9 +23,35 @@
     </div>
   </header>
   <main class="flex felx-row gap-2 mt-[1vh] w-full h-[90vh] ">
-    <div class="bg-green-100 w-[25%] h-[90vh] shadow"></div>
-    <div class="bg-green-100 w-[50%] h-[90vh] shadow"></div>
-    <div class="bg-green-100 w-[25%] h-[90vh] shadow"></div>
+    <div id="contacts" class="bg-green-100 w-[25%] p-2 h-[90vh] shadow">
+      <div class="w-full h-full p-3 rounded-3xl flex flex-col items-center">
+        <input type="text" placeholder="search" class="w-full h-[4vh] mb-3 bg-green-50 text-center font-semibold rounded-full">
+        <div class="h-[7vh] p-2 flex items-center rounded-full hover:bg-green-50 hover:cursor-pointer">
+          <div id="profile-picture" class="w-[5vh] h-[5vh] rounded-full bg-black"><img src="" alt=""></div>
+          <div class="p-3 gap-1">
+            <h1 class="font-semibold">gaurav saklani</h1>
+            <p class="text-sm">message</p>
+          </div>
+          <div id="count" class="w-[3vh] h-[3vh] ml-38 text-center rounded-full bg-green-400 font-bold text-white "> 
+          2
+          </div>
+        </div>
+        <div class="h-[7vh] p-2 flex items-center rounded-full hover:bg-green-50 hover:cursor-pointer">
+          <div id="profile-picture" class="w-[5vh] h-[5vh] rounded-full bg-black"><img src="" alt=""></div>
+          <div class="p-3 gap-1">
+            <h1 class="font-semibold">gaurav saklani</h1>
+            <p class="text-sm">message</p>
+          </div>
+          <div id="count" class="w-[3vh] h-[3vh] ml-38 text-center rounded-full bg-green-400 font-bold text-white "> 
+          2
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="chat-area" class="bg-green-100 w-[50%] h-[90vh] shadow">
+
+    </div>
+    <div id="add-friends" class="bg-green-100 w-[25%] h-[90vh] shadow"></div>
   </main>
   <!-- Rest of the content -->
   <%- include('components/footer') %>
