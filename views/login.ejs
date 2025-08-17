@@ -1,24 +1,24 @@
 <%- include('components/header') %>
-    <div class="w-full h-screen flex items-center justify-center">
-        <div class="w-[50vh] h-[70vh] border-2 border-black rounded-3xl text-center p-10">
-            <div class="mb-10 top-0">
+    <div class="w-full h-screen flex items-center justify-center bg-[#ABABAB]">
+        <div class="w-[60vh] h-[70vh] border-none rounded-[15%] text-center p-10 bg-[#D7D7D7] ">
+            <div class="mb-5 top-0 gap-5 flex items-center justify-center">
+                <div>
+                    <img  class="w-[8vh] h-[8vh] rounded-full" src="/images/logo.jpg" alt="logo">
+                </div>
                 <h1 class="text-3xl font-bold">ChatRoom</h1>
             </div>
-            <form class="login flex flex-col gap-4" action="/login" method="post">
-                <div class="w-full flex flex-col">
-                    <input
-                        class="bg-gray-100 font-semibold hover:border-black hover:font-bold h-[7vh] text-center rounded-3xl"
-                        type="text" id="username" name="username" required placeholder="Username">
+            <form class="login flex flex-col" action="/login" method="post">
+                <div class="w-full flex flex-col p-2">
+                    <input class=" bg-gray-100  font-semibold hover:border-black hover:font-bold h-[6vh] text-center rounded-3xl" type="text" id="username" name="username" required placeholder="Username">
                 </div>
-                <div class="w-full flex flex-col">
-                    <input
-                        class="bg-gray-100 font-semibold hover:border-black hover:font-bold h-[7vh] text-center rounded-3xl"
-                        type="password" id="password" name="password" required placeholder="Password">
+                <div class="w-full flex flex-col p-2">
+                    <input class=" bg-gray-100  font-semibold hover:border-black hover:font-bold h-[6vh] text-center rounded-3xl" type="password" id="password" name="password" required placeholder="Password">
                 </div>
-                <div class="w-full text-center">
-                    <input type="submit"
-                        class="bg-blue-400 font-semibold hover:cursor-pointer hover:bg-blue-500 hover:font-bold h-[5vh] w-full text-center rounded-3xl"
-                        value="signup">
+                <div class="w-full text-center p-2">
+                    <input type="submit" class="bg-blue-400 font-semibold hover:cursor-pointer hover:bg-blue-500 hover:font-bold h-[5vh] w-full text-center rounded-3xl" value="signup">
+                </div>
+                <div class="w-full flex flex-col py-4 px-2">
+                    <input class="bg-red-500 font-semibold hover:border-black hover:font-bold h-[6vh] text-center text-white rounded-3xl" type="submit" value="LogIn with Google">
                 </div>
                 <div class="mt-10 font-semibold">
                     Don't have account <a class="hover:cursor-pointer text-blue-400 hover:text-blue-500 font-bold"

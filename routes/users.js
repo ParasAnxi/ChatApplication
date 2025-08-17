@@ -10,10 +10,6 @@ const userSchema = new mongoose.Schema({
     unique: true
   },
   password: String, // will be handled by passport-local-mongoose
-  PhoneNumber: {
-    type: String,
-    required: true
-  },
   profilePicture: {
     type: String,
     default: '/images/default.jpg' // default image path

@@ -1,0 +1,108 @@
+<%- include('components/header') %>
+
+  <div class="w-full h-screen bg-[#ABABAB]">
+    <header class="h-[8vh] bg-[#D7D7D7] flex items-center rounded-b-4xl justify-between px-4 py-2 shadow">
+      <div class="flex items-center space-x-4">
+        <a href="#"><img src="/images/logo.jpg" class="w-[6vh] h-[6vh] rounded-full" alt="logo"></a>
+        <h1 class="text-2xl font-bold ml-[80vh] text-center">ChatRoom</h1>
+      </div>
+      <div class="relative inline-block" id="dropdownWrapper">
+        <button id="dropdownButton" class="flex hover:cursor-pointer items-center">
+          <div class="w-[6vh] h-[6vh] rounded-full overflow-hidden mb-3">
+            <img src="<%= currentUser.profilePicture || '/images/default.jpg' %>" alt="profile"
+              class="w-full h-full object-cover">
+          </div>
+          <svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-gray-400 ml-1">
+            <path
+              d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" />
+          </svg>
+        </button>
+        <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg z-50">
+          <a href="/logout" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Logout</a>
+          <a href="/" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Add Account</a>
+          <a href="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex flex-row gap-2 mt-[1vh] w-full h-[90vh]">
+      <!-- Left: Current User Profile -->
+      <div id="profile" class="bg-[#D7D7D7] w-[22%] rounded-4xl p-3 gap-5 h-full shadow flex flex-col items-center">
+        <div class="w-full bg-white h-[6vh] rounded-3xl">
+        </div>
+        <div class="w-full flex flex-col items-center gap-2">
+          <div class="w-full bg-[#ECECEC] h-[6vh] rounded-3xl">
+          </div>
+          <div class="w-full bg-[#ECECEC] h-[6vh] rounded-3xl">
+          </div>
+        </div>
+      </div>
+
+      <!-- Center: Chat Area Placeholder -->
+      <div id="chat-area"
+        class="bg-[#D7D7D7] w-[58%] h-[90vh] rounded-4xl shadow flex items-center justify-center text-gray-500">
+        <p>Chat area coming soon...</p>
+      </div>
+
+      <!-- Right: Search and User List -->
+      <div id="users-list" class="bg-[#D7D7D7] rounded-4xl w-[20%] h-[90vh] shadow p-3 gap-2 overflow-y-auto">
+        <!-- Corrected: The form action is now set to /home to work with the router's search functionality -->
+        <div class="w-full h-[45vh] bg-[#ECECEC] p-3 rounded-4xl">
+          <form method="GET" action="/home" class="mb-3">
+          <input type="text" name="search" placeholder="Search users"
+            class="w-full h-[4vh] bg-white text-center font-semibold rounded-full">
+        </form>
+
+        <% users.forEach(function(user) { %>
+          <div class="h-[7vh] p-2 flex items-center mt-2 rounded-full hover:bg-green-50 hover:cursor-pointer mb-2">
+            <div class="w-[5vh] h-[5vh] rounded-full overflow-hidden bg-black">
+              <img src="<%= user.profilePicture || '/images/default.jpg' %>" alt="profile"
+                class="w-full h-full object-cover">
+            </div>
+            <div class="p-3 gap-1 ">
+              <div>
+                <h1 class="font-semibold">
+                  <%= user.username %>
+                </h1>
+              </div>
+              <span>
+                <button onclick="addUser('<%= user._id %>')" class="text-green-600 hover:text-green-800">
+                  <i class="fa-solid fa-user-plus"></i>
+                </button>
+              </span>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+        <div class="w-full h-[41vh] bg-[#ECECEC] p-3 rounded-4xl mt-2">
+          <div class="w-full text-2xl text-center font-bold">Requests</div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      const button = document.getElementById('dropdownButton');
+      const menu = document.getElementById('dropdownMenu');
+
+      button.addEventListener('click', () => {
+        menu.classList.toggle('hidden');
+      });
+
+      window.addEventListener('click', (e) => {
+        if (!document.getElementById('dropdownWrapper').contains(e.target)) {
+          menu.classList.add('hidden');
+        }
+      });
+
+      function addUser(userId) {
+        fetch(`/users/add/${userId}`, {
+          method: 'POST'
+        }).then(res => res.json())
+          .then(data => {
+            alert(data.message);
+          });
+      }
+
+    </script>
+  </div>
+  <%- include('components/footer') %>
