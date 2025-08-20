@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const userModel = require('./users');
+const userModel = require('./users'); // This is your mongoose model with passport-local-mongoose
 const passport = require('passport');
 const localStrategy = require('passport-local').Strategy;
 
@@ -11,86 +11,130 @@ passport.deserializeUser(userModel.deserializeUser());
 
 // Middleware to check if a user is authenticated
 function isLoggedIn(req, res, next) {
-  // If the user is authenticated, continue to the next middleware
   if (req.isAuthenticated()) return next();
-  // Otherwise, redirect them to the login page
   res.redirect('/login');
 }
 
-// Corrected profile route with proper parameter order and security middleware
+// Profile route
 router.get('/profile', isLoggedIn, (req, res) => {
   res.render('profile');
 });
 
 // Signup route
 router.post('/signup', (req, res) => {
-  const { username, FullName, PhoneNumber, password } = req.body;
-  // Create a new user instance
-  const userData = new userModel({ username, FullName, PhoneNumber });
+  const { username, FullName, password } = req.body;
+  const userData = new userModel({ username, FullName});
 
-  // Register the user with the given password
   userModel.register(userData, password)
     .then(() => {
-      // Authenticate the user after successful registration and redirect to home
       passport.authenticate('local')(req, res, () => res.redirect('/home'));
     })
-    .catch(err => {
-      // Handle registration errors
-      res.status(500).send('Registration failed: ' + err.message);
-    });
+    .catch(err => res.status(500).send('Registration failed: ' + err.message));
 });
 
 // Login route
 router.post('/login',
-  // Use Passport's authenticate middleware
   passport.authenticate('local', {
-    successRedirect: '/home', // Redirect to home on successful login
-    failureRedirect: '/login', // Redirect back to login on failure
-    failureFlash: false // Disable flash messages for this example
+    successRedirect: '/home',
+    failureRedirect: '/login',
+    failureFlash: false
   })
 );
 
 // Logout route
 router.get('/logout', (req, res, next) => {
-  // Use req.logout to log the user out
   req.logout(err => {
     if (err) return next(err);
-    // Redirect to the home page after logout
     res.redirect('/');
   });
 });
 
-// Home route, protected by isLoggedIn middleware
+// Home route with search + requests/friends
+// Example route
 router.get('/home', isLoggedIn, async (req, res) => {
   try {
-    // Find the currently logged-in user
-    const currentUser = await userModel.findOne({ username: req.session.passport.user });
-    const searchQuery = req.query.search || '';
+    const currentUser = await userModel.findById(req.user._id)
+      .populate('requests')
+      .populate('friends')
+      .exec();
 
-    // Find users whose username or FullName matches the search query (case-insensitive)
-    const users = await userModel.find({
-      $or: [
-        { username: { $regex: searchQuery, $options: 'i' } },
-        { FullName: { $regex: searchQuery, $options: 'i' } }
-      ]
+    const users = await userModel.find({ _id: { $ne: req.user._id } });
+
+    res.render('home', {
+      currentUser,
+      users
     });
-
-    // Render the home page with the user data
-    res.render('home', { currentUser, users });
   } catch (err) {
-    // Handle database errors
-    res.status(500).send('Error loading profile and users: ' + err.message);
+    console.error(err);
+    res.status(500).send("Server Error");
   }
 });
 
-// Signup page
-router.get('/', (req, res) => {
-  res.render('signup');
+
+
+// ✅ Send Friend Request
+router.post("/add/:id", isLoggedIn, async (req, res) => {
+  try {
+    const me = await userModel.findById(req.user._id);
+    const other = await userModel.findById(req.params.id);
+
+    if (!other.requests.includes(me._id) && !other.friends.includes(me._id)) {
+      other.requests.push(me._id); // my request goes into "other" user's requests
+      await other.save();
+    }
+    res.redirect("/home");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error sending request");
+  }
 });
 
-// Login page
-router.get('/login', (req, res) => {
-  res.render('login');
+// ✅ Accept Friend Request
+router.post("/accept/:id", isLoggedIn, async (req, res) => {
+  try {
+    const me = await userModel.findById(req.user._id);
+    const other = await userModel.findById(req.params.id);
+
+    // Check if this request exists
+    if (me.requests.includes(other._id)) {
+      // Add each other to friends list
+      me.friends.push(other._id);
+      other.friends.push(me._id);
+
+      // Remove request
+      me.requests = me.requests.filter(r => r.toString() !== other._id.toString());
+
+      await me.save();
+      await other.save();
+    }
+    res.redirect("/home");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error accepting request");
+  }
 });
+
+// ✅ Reject Friend Request
+router.post("/reject/:id", isLoggedIn, async (req, res) => {
+  try {
+    const me = await userModel.findById(req.user._id);
+
+    // Just remove from requests
+    me.requests = me.requests.filter(r => r.toString() !== req.params.id);
+
+    await me.save();
+    res.redirect("/home");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error rejecting request");
+  }
+});
+
+
+// Signup page
+router.get('/', (req, res) => res.render('signup'));
+
+// Login page
+router.get('/login', (req, res) => res.render('login'));
 
 module.exports = router;

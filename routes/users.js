@@ -4,20 +4,10 @@ const plm = require('passport-local-mongoose');
 mongoose.connect("mongodb://127.0.0.1:27017/ChatApplication");
 
 const userSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  password: String, // will be handled by passport-local-mongoose
-  profilePicture: {
-    type: String,
-    default: '/images/default.jpg' // default image path
-  },
-  FullName: {
-    type: String,
-    required: true
-  }
+  username: String,
+  FullName: String,
+  requests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // incoming requests
+  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]   // accepted friends
 });
 
 userSchema.plugin(plm);
