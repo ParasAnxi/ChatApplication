@@ -16,8 +16,19 @@ function isLoggedIn(req, res, next) {
 }
 
 // Profile route
-router.get('/profile', isLoggedIn, (req, res) => {
-  res.render('profile');
+router.get('/profile', isLoggedIn, async (req, res) => {
+  try {
+    const currentUser = await userModel.findById(req.user._id);
+    const users = await userModel.find({ _id: { $ne: req.user._id } });
+
+    res.render('profile', {
+      currentUser,
+      users
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
 });
 
 // Signup route
@@ -129,6 +140,7 @@ router.post("/reject/:id", isLoggedIn, async (req, res) => {
     res.status(500).send("Error rejecting request");
   }
 });
+
 
 
 // Signup page
